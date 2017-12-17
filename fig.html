@@ -1,0 +1,1832 @@
+
+<!DOCTYPE html> 
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+<title></title> 
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		
+		//localStorage.removeItem("dados");
+		var dados = localStorage.getItem("dados");
+		if (dados==null)
+		{
+			var str =stringFill2('0',640);
+			alert(str);
+			localStorage.setItem("dados", str);
+		}
+		else{
+			teste();
+		}
+		
+		/**********************************************************************/
+		$( "input[type='checkbox']" ).change(function() {
+			var name = $(this);
+			var check = $(this).attr('checked');
+			var id = $(this).attr('id');
+			var idnro = parseInt(id.replace("fig",""));
+			var valorChecked;
+			var dados = localStorage.getItem("dados");
+			var t = Right(Left(dados,idnro+1),1);
+			if (t=="0")
+				valorChecked="1";
+			else
+				valorChecked="0";
+			
+			dados = substituiCharPosicao(dados,idnro,valorChecked);			
+			localStorage.setItem("dados", dados);
+		});
+		/**********************************************************************/
+	
+		//$('<input>') // Cria um elemento input
+		//.attr({ type: 'checkbox', name: 'fig001', id: 'fig001'}) // Definindo atributos
+		//.appendTo('#myDiv'); // Adiciona ele ao elemento div com o id myDiv
+		
+		//$('<label>') // Cria um elemento input
+		//.attr({ for: 'fig001'}) // Definindo atributos
+		//.append("001")
+		
+		//.appendTo('#myDiv'); // Adiciona ele ao elemento div com o id myDiv
+	});
+    
+	
+    function Carrega(){
+        $.ajax({
+            type: "GET",                
+            url: "http://localhost:60313/Api/livro",
+            data: "{}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic " + btoa('username:password'));
+            },              
+            success: function (data) {
+                $.each(data, function (i, theItem) {
+
+                    var combo = document.getElementById("combo1");
+                    var option = document.createElement("option");
+                    option.text = theItem["Nome"].toString();
+                    option.value = theItem["Id"].toString();
+                    try {
+                        combo.add(option, null); // outros browsers
+                    }
+                    catch (error) {
+                        alert('error found');
+                        combo.add(option); // browser mais antigos
+                    }
+
+                });
+            },
+    
+
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                if (XMLHttpRequest.status == 0) {
+                    alert('Sem rede...');
+                } else if (XMLHttpRequest.status == 404) {
+                    alert('URL não encontrada...');
+                } else if (XMLHttpRequest.status == 500) {
+                    alert('Erro interno...');
+                } else if (XMLHttpRequest.status == 401) {
+                    alert('Não autorizado...');
+                } else {
+                    alert('Erro desconhecido: ' + XMLHttpRequest.responseText);
+                }
+            }
+        });
+    }
+	
+	function stringFill2(x, n) { 
+		var s = ''; 
+		while (n-- > 0) s += x; 
+		return s; 
+	} 
+	
+	function substituiCharPosicao(s,  pos, c) {
+	   return s.substring(0,pos) + c + s.substring(pos+1);
+	}
+
+	
+	function teste(){
+		var str = localStorage.getItem("dados");
+		for (var i=0;i<=str.length;i++)
+		{
+			var res = str.substr(i,1);
+			$('#fig'+Right("00"+i,3))
+				.attr('checked',(res=="1"))
+				.checkboxradio("refresh");
+		}
+	}
+
+	function Right(str, n){
+		if (n <= 0)
+		   return "";
+		else if (n > String(str).length)
+		   return str;
+		else {
+		   var iLen = String(str).length;
+		   return String(str).substring(iLen, iLen - n);
+		}
+	}
+	
+	function Left(str, n){
+		if (n <= 0)
+		return "";
+		else if (n > String(str).length)
+		return str;
+		else
+		return String(str).substring(0,n);
+	}	
+</script>
+
+
+</head>
+<body>
+<form>
+
+<div data-role="page" data-title="Faltantes" id="home">
+    <div data-role="header">
+        <h1>Fig</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">000-099</a></li>
+                <li><a href="#pag2" class="ui-btn-active ui-state-persist">100-199</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+                <li><a href="#pag4" class="ui-btn-active ui-state-persist">300-399</a></li>
+                <li><a href="#pag5" class="ui-btn-active ui-state-persist">400-499</a></li>
+                <li><a href="#pag6" class="ui-btn-active ui-state-persist">500-599</a></li>            
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+    <h1>Competência a seu serviço</h1> 
+ 
+
+ <fieldset data-role="controlgroup" data-type="horizontal">      
+            <input type="checkbox" name="fig000" id="fig000">
+            <label for="fig000">000</label>
+            <input type="checkbox" name="fig001" id="fig001">
+            <label for="fig001">001</label>
+            <input type="checkbox" name="fig002" id="fig002">
+            <label for="fig002">002</label>
+            <input type="checkbox" name="fig003" id="fig003">
+            <label for="fig003">003</label>
+            <input type="checkbox" name="fig004" id="fig004">
+            <label for="fig004">004</label>
+            <input type="checkbox" name="fig005" id="fig005">
+            <label for="fig005">005</label>
+            <input type="checkbox" name="fig006" id="fig006">
+            <label for="fig006">006</label>
+            <input type="checkbox" name="fig007" id="fig007">       
+            <label for="fig007">007</label>
+            <input type="checkbox" name="fig008" id="fig008">
+            <label for="fig008">008</label>
+            <input type="checkbox" name="fig009" id="fig009">
+            <label for="fig009">009</label>
+            <input type="checkbox" name="fig010" id="fig010">
+            <label for="fig010">010</label>     
+            <input type="checkbox" name="fig011" id="fig011">
+            <label for="fig011">011</label>
+            <input type="checkbox" name="fig012" id="fig012">
+            <label for="fig012">012</label>
+            <input type="checkbox" name="fig013" id="fig013">
+            <label for="fig013">013</label>
+            <input type="checkbox" name="fig014" id="fig014">
+            <label for="fig014">014</label>
+            <input type="checkbox" name="fig015" id="fig015">
+            <label for="fig015">015</label>
+            <input type="checkbox" name="fig016" id="fig016">
+            <label for="fig016">016</label>
+            <input type="checkbox" name="fig017" id="fig017">       
+            <label for="fig017">017</label>
+            <input type="checkbox" name="fig018" id="fig018">
+            <label for="fig018">018</label>
+            <input type="checkbox" name="fig019" id="fig019">
+            <label for="fig019">019</label>
+            <input type="checkbox" name="fig020" id="fig020">
+            <label for="fig020">020</label>             
+            <input type="checkbox" name="fig021" id="fig021">
+            <label for="fig021">021</label>
+            <input type="checkbox" name="fig022" id="fig022">
+            <label for="fig022">022</label>
+            <input type="checkbox" name="fig023" id="fig023">
+            <label for="fig023">023</label>
+            <input type="checkbox" name="fig024" id="fig024">
+            <label for="fig024">024</label>
+            <input type="checkbox" name="fig025" id="fig025">
+            <label for="fig025">025</label>
+            <input type="checkbox" name="fig026" id="fig026">
+            <label for="fig026">026</label>
+            <input type="checkbox" name="fig027" id="fig027">       
+            <label for="fig027">027</label>
+            <input type="checkbox" name="fig028" id="fig028">
+            <label for="fig028">028</label>
+            <input type="checkbox" name="fig029" id="fig029">
+            <label for="fig029">029</label>
+            <input type="checkbox" name="fig030" id="fig030">
+            <label for="fig030">030</label>             
+            <input type="checkbox" name="fig031" id="fig031">
+            <label for="fig031">031</label>
+            <input type="checkbox" name="fig032" id="fig032">
+            <label for="fig032">032</label>
+            <input type="checkbox" name="fig033" id="fig033">
+            <label for="fig033">033</label>
+            <input type="checkbox" name="fig034" id="fig034">
+            <label for="fig034">034</label>
+            <input type="checkbox" name="fig035" id="fig035">
+            <label for="fig035">035</label>
+            <input type="checkbox" name="fig036" id="fig036">
+            <label for="fig036">036</label>
+            <input type="checkbox" name="fig037" id="fig037">       
+            <label for="fig037">037</label>
+            <input type="checkbox" name="fig038" id="fig038">
+            <label for="fig038">038</label>
+            <input type="checkbox" name="fig039" id="fig039">
+            <label for="fig039">039</label>
+            <input type="checkbox" name="fig040" id="fig040">
+            <label for="fig040">040</label>             
+            <input type="checkbox" name="fig041" id="fig041">
+            <label for="fig041">041</label>
+            <input type="checkbox" name="fig042" id="fig042">
+            <label for="fig042">042</label>
+            <input type="checkbox" name="fig043" id="fig043">
+            <label for="fig043">043</label>
+            <input type="checkbox" name="fig044" id="fig044">
+            <label for="fig044">044</label>
+            <input type="checkbox" name="fig045" id="fig045">
+            <label for="fig045">045</label>
+            <input type="checkbox" name="fig046" id="fig046">
+            <label for="fig046">046</label>
+            <input type="checkbox" name="fig047" id="fig047">       
+            <label for="fig047">047</label>
+            <input type="checkbox" name="fig048" id="fig048">
+            <label for="fig048">048</label>
+            <input type="checkbox" name="fig049" id="fig049">
+            <label for="fig049">049</label>
+            <input type="checkbox" name="fig050" id="fig050">
+            <label for="fig050">050</label>             
+            <input type="checkbox" name="fig051" id="fig051">
+            <label for="fig051">051</label>
+            <input type="checkbox" name="fig052" id="fig052">
+            <label for="fig052">052</label>
+            <input type="checkbox" name="fig053" id="fig053">
+            <label for="fig053">053</label>
+            <input type="checkbox" name="fig054" id="fig054">
+            <label for="fig054">054</label>
+            <input type="checkbox" name="fig055" id="fig055">
+            <label for="fig055">055</label>
+            <input type="checkbox" name="fig056" id="fig056">
+            <label for="fig056">056</label>
+            <input type="checkbox" name="fig057" id="fig057">       
+            <label for="fig057">057</label>
+            <input type="checkbox" name="fig058" id="fig058">
+            <label for="fig058">058</label>
+            <input type="checkbox" name="fig059" id="fig059">
+            <label for="fig059">059</label>
+            <input type="checkbox" name="fig060" id="fig060">
+            <label for="fig060">060</label>             
+            <input type="checkbox" name="fig061" id="fig061">
+            <label for="fig061">061</label>
+            <input type="checkbox" name="fig062" id="fig062">
+            <label for="fig062">062</label>
+            <input type="checkbox" name="fig063" id="fig063">
+            <label for="fig063">063</label>
+            <input type="checkbox" name="fig064" id="fig064">
+            <label for="fig064">064</label>
+            <input type="checkbox" name="fig065" id="fig065">
+            <label for="fig065">065</label>
+            <input type="checkbox" name="fig066" id="fig066">
+            <label for="fig066">066</label>
+            <input type="checkbox" name="fig067" id="fig067">       
+            <label for="fig067">067</label>
+            <input type="checkbox" name="fig068" id="fig068">
+            <label for="fig068">068</label>
+            <input type="checkbox" name="fig069" id="fig069">
+            <label for="fig069">069</label>
+            <input type="checkbox" name="fig070" id="fig070">
+            <label for="fig070">070</label>             
+            <input type="checkbox" name="fig071" id="fig071">
+            <label for="fig071">071</label>
+            <input type="checkbox" name="fig072" id="fig072">
+            <label for="fig072">072</label>
+            <input type="checkbox" name="fig073" id="fig073">
+            <label for="fig073">073</label>
+            <input type="checkbox" name="fig074" id="fig074">
+            <label for="fig074">074</label>
+            <input type="checkbox" name="fig075" id="fig075">
+            <label for="fig075">075</label>
+            <input type="checkbox" name="fig076" id="fig076">
+            <label for="fig076">076</label>
+            <input type="checkbox" name="fig077" id="fig077">       
+            <label for="fig077">077</label>
+            <input type="checkbox" name="fig078" id="fig078">
+            <label for="fig078">078</label>
+            <input type="checkbox" name="fig079" id="fig079">
+            <label for="fig079">079</label>
+            <input type="checkbox" name="fig080" id="fig080">
+            <label for="fig080">080</label>             
+            <input type="checkbox" name="fig081" id="fig081">
+            <label for="fig081">081</label>
+            <input type="checkbox" name="fig082" id="fig082">
+            <label for="fig082">082</label>
+            <input type="checkbox" name="fig083" id="fig083">
+            <label for="fig083">083</label>
+            <input type="checkbox" name="fig084" id="fig084">
+            <label for="fig084">084</label>
+            <input type="checkbox" name="fig085" id="fig085">   
+            <label for="fig085">085</label>
+            <input type="checkbox" name="fig086" id="fig086">
+            <label for="fig086">086</label>
+            <input type="checkbox" name="fig087" id="fig087">       
+            <label for="fig087">087</label>
+            <input type="checkbox" name="fig088" id="fig088">
+            <label for="fig088">088</label>
+            <input type="checkbox" name="fig089" id="fig089">
+            <label for="fig089">089</label>
+            <input type="checkbox" name="fig090" id="fig090">
+            <label for="fig090">090</label>                     
+            <input type="checkbox" name="fig091" id="fig091">
+            <label for="fig091">091</label>
+            <input type="checkbox" name="fig092" id="fig092">
+            <label for="fig092">092</label>
+            <input type="checkbox" name="fig093" id="fig093">
+            <label for="fig093">093</label>
+            <input type="checkbox" name="fig094" id="fig094">
+            <label for="fig094">094</label>
+            <input type="checkbox" name="fig095" id="fig095">
+            <label for="fig095">095</label>
+            <input type="checkbox" name="fig096" id="fig096">
+            <label for="fig096">096</label>
+            <input type="checkbox" name="fig097" id="fig097">       
+            <label for="fig097">097</label>
+            <input type="checkbox" name="fig098" id="fig098">
+            <label for="fig098">098</label>
+            <input type="checkbox" name="fig099" id="fig099">
+            <label for="fig099">099</label>
+
+        </fieldset> 
+        
+        <input type="button" class="bt" value="Avançar" onclick="teste();">
+             <select id="combo1" name="combo1">
+        </select>
+
+    </div>
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div> 
+
+<div data-role="page" data-title="Repetidas" id="repetidas">
+    <div data-role="header">
+        <h1>Repetidas</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">000-099</a></li>
+                <li><a href="#pag2" class="ui-btn-active ui-state-persist">100-199</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+                <li><a href="#pag4" class="ui-btn-active ui-state-persist">300-399</a></li>
+                <li><a href="#pag5" class="ui-btn-active ui-state-persist">400-499</a></li>
+                <li><a href="#pag6" class="ui-btn-active ui-state-persist">500-599</a></li>            
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+    <fieldset data-role="controlgroup" data-type="horizontal">      
+            <input type="checkbox" name="fig100" id="fig100">
+            <label for="fig100">100</label>             
+            <input type="checkbox" name="fig101" id="fig101">
+            <label for="fig101">101</label>
+            <input type="checkbox" name="fig102" id="fig102">
+            <label for="fig102">102</label>
+            <input type="checkbox" name="fig103" id="fig103">
+            <label for="fig103">103</label>
+            <input type="checkbox" name="fig104" id="fig104">
+            <label for="fig104">104</label>
+            <input type="checkbox" name="fig105" id="fig105">
+            <label for="fig105">105</label>
+            <input type="checkbox" name="fig106" id="fig106">
+            <label for="fig106">106</label>
+            <input type="checkbox" name="fig107" id="fig107">       
+            <label for="fig107">107</label>
+            <input type="checkbox" name="fig108" id="fig108">
+            <label for="fig108">108</label>
+            <input type="checkbox" name="fig109" id="fig109">
+            <label for="fig109">109</label>
+            <input type="checkbox" name="fig110" id="fig110">
+            <label for="fig110">110</label>
+            <input type="checkbox" name="fig111" id="fig111">
+            <label for="fig111">111</label>
+            <input type="checkbox" name="fig112" id="fig112">
+            <label for="fig112">112</label>
+            <input type="checkbox" name="fig113" id="fig113">
+            <label for="fig113">113</label>
+            <input type="checkbox" name="fig114" id="fig114">
+            <label for="fig114">114</label>
+            <input type="checkbox" name="fig115" id="fig115">
+            <label for="fig115">115</label>
+            <input type="checkbox" name="fig116" id="fig116">
+            <label for="fig116">116</label>
+            <input type="checkbox" name="fig117" id="fig117">       
+            <label for="fig117">117</label>
+            <input type="checkbox" name="fig118" id="fig118">
+            <label for="fig118">118</label>
+            <input type="checkbox" name="fig119" id="fig119">
+            <label for="fig119">119</label>
+            <input type="checkbox" name="fig120" id="fig120">
+            <label for="fig120">120</label>     
+            <input type="checkbox" name="fig121" id="fig121">
+            <label for="fig121">121</label>
+            <input type="checkbox" name="fig122" id="fig122">
+            <label for="fig122">122</label>
+            <input type="checkbox" name="fig123" id="fig123">
+            <label for="fig123">123</label>
+            <input type="checkbox" name="fig124" id="fig124">
+            <label for="fig124">124</label>
+            <input type="checkbox" name="fig125" id="fig125">
+            <label for="fig125">125</label>
+            <input type="checkbox" name="fig126" id="fig126">
+            <label for="fig126">126</label>
+            <input type="checkbox" name="fig127" id="fig127">       
+            <label for="fig127">127</label>
+            <input type="checkbox" name="fig128" id="fig128">
+            <label for="fig128">128</label>
+            <input type="checkbox" name="fig129" id="fig129">
+            <label for="fig129">129</label>
+            <input type="checkbox" name="fig130" id="fig130">
+            <label for="fig130">130</label>             
+            <input type="checkbox" name="fig131" id="fig131">
+            <label for="fig131">131</label>
+            <input type="checkbox" name="fig132" id="fig132">
+            <label for="fig132">132</label>
+            <input type="checkbox" name="fig133" id="fig133">
+            <label for="fig133">133</label>
+            <input type="checkbox" name="fig134" id="fig134">
+            <label for="fig134">134</label>
+            <input type="checkbox" name="fig135" id="fig135">
+            <label for="fig135">135</label>
+            <input type="checkbox" name="fig136" id="fig136">
+            <label for="fig136">136</label>
+            <input type="checkbox" name="fig137" id="fig137">       
+            <label for="fig137">137</label>
+            <input type="checkbox" name="fig138" id="fig138">
+            <label for="fig138">138</label>
+            <input type="checkbox" name="fig139" id="fig139">
+            <label for="fig139">139</label>
+            <input type="checkbox" name="fig140" id="fig140">
+            <label for="fig140">140</label>             
+            <input type="checkbox" name="fig141" id="fig141">
+            <label for="fig141">141</label>
+            <input type="checkbox" name="fig142" id="fig142">
+            <label for="fig142">142</label>
+            <input type="checkbox" name="fig143" id="fig143">
+            <label for="fig143">143</label>
+            <input type="checkbox" name="fig144" id="fig144">
+            <label for="fig144">144</label>
+            <input type="checkbox" name="fig145" id="fig145">
+            <label for="fig145">145</label>
+            <input type="checkbox" name="fig146" id="fig146">
+            <label for="fig146">146</label>
+            <input type="checkbox" name="fig147" id="fig147">       
+            <label for="fig147">147</label>
+            <input type="checkbox" name="fig148" id="fig148">
+            <label for="fig148">148</label>
+            <input type="checkbox" name="fig149" id="fig149">
+            <label for="fig149">149</label>
+            <input type="checkbox" name="fig150" id="fig150">
+            <label for="fig150">150</label>             
+            <input type="checkbox" name="fig151" id="fig151">
+            <label for="fig151">151</label>
+            <input type="checkbox" name="fig152" id="fig152">
+            <label for="fig152">152</label>
+            <input type="checkbox" name="fig153" id="fig153">
+            <label for="fig153">153</label>
+            <input type="checkbox" name="fig154" id="fig154">
+            <label for="fig154">154</label>
+            <input type="checkbox" name="fig155" id="fig155">
+            <label for="fig155">155</label>
+            <input type="checkbox" name="fig156" id="fig156">
+            <label for="fig156">156</label>
+            <input type="checkbox" name="fig157" id="fig157">       
+            <label for="fig157">157</label>
+            <input type="checkbox" name="fig158" id="fig158">
+            <label for="fig158">158</label>
+            <input type="checkbox" name="fig159" id="fig159">
+            <label for="fig159">159</label>
+            <input type="checkbox" name="fig160" id="fig160">
+            <label for="fig160">160</label>             
+            <input type="checkbox" name="fig161" id="fig161">
+            <label for="fig161">161</label>
+            <input type="checkbox" name="fig162" id="fig162">
+            <label for="fig162">162</label>
+            <input type="checkbox" name="fig163" id="fig163">
+            <label for="fig163">163</label>
+            <input type="checkbox" name="fig164" id="fig164">
+            <label for="fig164">164</label>
+            <input type="checkbox" name="fig165" id="fig165">
+            <label for="fig165">165</label>
+            <input type="checkbox" name="fig166" id="fig166">
+            <label for="fig166">166</label>
+            <input type="checkbox" name="fig167" id="fig167">       
+            <label for="fig167">167</label>
+            <input type="checkbox" name="fig168" id="fig168">
+            <label for="fig168">168</label>
+            <input type="checkbox" name="fig169" id="fig169">
+            <label for="fig169">169</label>
+            <input type="checkbox" name="fig170" id="fig170">
+            <label for="fig170">170</label>             
+            <input type="checkbox" name="fig171" id="fig171">
+            <label for="fig171">171</label>
+            <input type="checkbox" name="fig172" id="fig172">
+            <label for="fig172">172</label>
+            <input type="checkbox" name="fig173" id="fig173">
+            <label for="fig173">173</label>
+            <input type="checkbox" name="fig174" id="fig174">
+            <label for="fig174">174</label>
+            <input type="checkbox" name="fig175" id="fig175">
+            <label for="fig175">175</label>
+            <input type="checkbox" name="fig176" id="fig176">
+            <label for="fig176">176</label>
+            <input type="checkbox" name="fig177" id="fig177">       
+            <label for="fig177">177</label>
+            <input type="checkbox" name="fig178" id="fig178">
+            <label for="fig178">178</label>
+            <input type="checkbox" name="fig179" id="fig179">
+            <label for="fig179">179</label>
+            <input type="checkbox" name="fig180" id="fig180">
+            <label for="fig180">180</label>             
+            <input type="checkbox" name="fig181" id="fig181">
+            <label for="fig181">181</label>
+            <input type="checkbox" name="fig182" id="fig182">
+            <label for="fig182">182</label>
+            <input type="checkbox" name="fig183" id="fig183">
+            <label for="fig183">183</label>
+            <input type="checkbox" name="fig184" id="fig184">
+            <label for="fig184">184</label>
+            <input type="checkbox" name="fig185" id="fig185">
+            <label for="fig185">185</label>
+            <input type="checkbox" name="fig186" id="fig186">
+            <label for="fig186">186</label>
+            <input type="checkbox" name="fig187" id="fig187">       
+            <label for="fig187">187</label>
+            <input type="checkbox" name="fig188" id="fig188">
+            <label for="fig188">188</label>
+            <input type="checkbox" name="fig189" id="fig189">
+            <label for="fig189">189</label>
+            <input type="checkbox" name="fig190" id="fig190">
+            <label for="fig190">190</label>             
+            <input type="checkbox" name="fig191" id="fig191">
+            <label for="fig191">191</label>
+            <input type="checkbox" name="fig192" id="fig192">
+            <label for="fig192">192</label>
+            <input type="checkbox" name="fig193" id="fig193">
+            <label for="fig193">193</label>
+            <input type="checkbox" name="fig194" id="fig194">
+            <label for="fig194">194</label>
+            <input type="checkbox" name="fig195" id="fig195">   
+            <label for="fig195">195</label>
+            <input type="checkbox" name="fig196" id="fig196">
+            <label for="fig196">196</label>
+            <input type="checkbox" name="fig197" id="fig197">       
+            <label for="fig197">197</label>
+            <input type="checkbox" name="fig198" id="fig198">
+            <label for="fig198">198</label>
+            <input type="checkbox" name="fig199" id="fig199">
+            <label for="fig199">199</label>
+        </fieldset> 
+
+    </div>
+    
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div>
+
+
+<div data-role="page" data-title="Repetidas" id="pag3">
+    <div data-role="header">
+        <h1>Repetidas</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">Faltantes</a></li>
+                <li><a href="#repetidas" class="ui-btn-active ui-state-persist">Repetidas</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+      <fieldset data-role="controlgroup" data-type="horizontal">      
+
+
+            <input type="checkbox" name="fig200" id="fig200">
+            <label for="fig200">200</label>             
+            <input type="checkbox" name="fig201" id="fig201">
+            <label for="fig201">201</label>
+            <input type="checkbox" name="fig202" id="fig202">
+            <label for="fig202">202</label>
+            <input type="checkbox" name="fig203" id="fig203">
+            <label for="fig203">203</label>
+            <input type="checkbox" name="fig204" id="fig204">
+            <label for="fig204">204</label>
+     
+            <input type="checkbox" name="fig205" id="fig205">
+            <label for="fig205">205</label>
+            <input type="checkbox" name="fig206" id="fig206">
+            <label for="fig206">206</label>
+            <input type="checkbox" name="fig207" id="fig207">       
+            <label for="fig207">207</label>
+            <input type="checkbox" name="fig208" id="fig208">
+            <label for="fig208">208</label>
+            <input type="checkbox" name="fig209" id="fig209">
+            <label for="fig209">209</label>
+             
+     
+            <input type="checkbox" name="fig210" id="fig210">
+            <label for="fig210">210</label>
+            <input type="checkbox" name="fig211" id="fig211">
+            <label for="fig211">211</label>
+            <input type="checkbox" name="fig212" id="fig212">
+            <label for="fig212">212</label>
+            <input type="checkbox" name="fig213" id="fig213">
+            <label for="fig213">213</label>
+            <input type="checkbox" name="fig214" id="fig214">
+            <label for="fig214">214</label>
+                     
+         
+            <input type="checkbox" name="fig215" id="fig215">
+            <label for="fig215">215</label>
+            <input type="checkbox" name="fig216" id="fig216">
+            <label for="fig216">216</label>
+            <input type="checkbox" name="fig217" id="fig217">       
+            <label for="fig217">217</label>
+            <input type="checkbox" name="fig218" id="fig218">
+            <label for="fig218">218</label>
+            <input type="checkbox" name="fig219" id="fig219">
+            <label for="fig219">219</label>
+         
+     
+            <input type="checkbox" name="fig220" id="fig220">
+            <label for="fig220">220</label>     
+            <input type="checkbox" name="fig221" id="fig221">
+            <label for="fig221">221</label>
+            <input type="checkbox" name="fig222" id="fig222">
+            <label for="fig222">222</label>
+            <input type="checkbox" name="fig223" id="fig223">
+            <label for="fig223">223</label>
+            <input type="checkbox" name="fig224" id="fig224">
+            <label for="fig224">224</label>
+                     
+             
+            <input type="checkbox" name="fig225" id="fig225">
+            <label for="fig225">225</label>
+            <input type="checkbox" name="fig226" id="fig226">
+            <label for="fig226">226</label>
+            <input type="checkbox" name="fig227" id="fig227">       
+            <label for="fig227">227</label>
+            <input type="checkbox" name="fig228" id="fig228">
+            <label for="fig228">228</label>
+            <input type="checkbox" name="fig229" id="fig229">
+            <label for="fig229">229</label>
+        
+     
+            <input type="checkbox" name="fig230" id="fig230">
+            <label for="fig230">230</label>             
+            <input type="checkbox" name="fig231" id="fig231">
+            <label for="fig231">231</label>
+            <input type="checkbox" name="fig232" id="fig232">
+            <label for="fig232">232</label>
+            <input type="checkbox" name="fig233" id="fig233">
+            <label for="fig233">233</label>
+            <input type="checkbox" name="fig234" id="fig234">
+            <label for="fig234">234</label>
+                     
+             
+            <input type="checkbox" name="fig235" id="fig235">
+            <label for="fig235">235</label>
+            <input type="checkbox" name="fig236" id="fig236">
+            <label for="fig236">236</label>
+            <input type="checkbox" name="fig237" id="fig237">       
+            <label for="fig237">237</label>
+            <input type="checkbox" name="fig238" id="fig238">
+            <label for="fig238">238</label>
+            <input type="checkbox" name="fig239" id="fig239">
+            <label for="fig239">239</label>
+         
+        
+     
+            <input type="checkbox" name="fig240" id="fig240">
+            <label for="fig240">240</label>             
+            <input type="checkbox" name="fig241" id="fig241">
+            <label for="fig241">241</label>
+            <input type="checkbox" name="fig242" id="fig242">
+            <label for="fig242">242</label>
+            <input type="checkbox" name="fig243" id="fig243">
+            <label for="fig243">243</label>
+            <input type="checkbox" name="fig244" id="fig244">
+            <label for="fig244">244</label>
+                     
+         
+            <input type="checkbox" name="fig245" id="fig245">
+            <label for="fig245">245</label>
+            <input type="checkbox" name="fig246" id="fig246">
+            <label for="fig246">246</label>
+            <input type="checkbox" name="fig247" id="fig247">       
+            <label for="fig247">247</label>
+            <input type="checkbox" name="fig248" id="fig248">
+            <label for="fig248">248</label>
+            <input type="checkbox" name="fig249" id="fig249">
+            <label for="fig249">249</label>
+         
+
+        
+     
+            <input type="checkbox" name="fig250" id="fig250">
+            <label for="fig250">250</label>             
+            <input type="checkbox" name="fig251" id="fig251">
+            <label for="fig251">251</label>
+            <input type="checkbox" name="fig252" id="fig252">
+            <label for="fig252">252</label>
+            <input type="checkbox" name="fig253" id="fig253">
+            <label for="fig253">253</label>
+            <input type="checkbox" name="fig254" id="fig254">
+            <label for="fig254">254</label>
+                     
+             
+            <input type="checkbox" name="fig255" id="fig255">
+            <label for="fig255">255</label>
+            <input type="checkbox" name="fig256" id="fig256">
+            <label for="fig256">256</label>
+            <input type="checkbox" name="fig257" id="fig257">       
+            <label for="fig257">257</label>
+            <input type="checkbox" name="fig258" id="fig258">
+            <label for="fig258">258</label>
+            <input type="checkbox" name="fig259" id="fig259">
+            <label for="fig259">259</label>
+             
+
+     
+            <input type="checkbox" name="fig260" id="fig260">
+            <label for="fig260">260</label>             
+            <input type="checkbox" name="fig261" id="fig261">
+            <label for="fig261">261</label>
+            <input type="checkbox" name="fig262" id="fig262">
+            <label for="fig262">262</label>
+            <input type="checkbox" name="fig263" id="fig263">
+            <label for="fig263">263</label>
+            <input type="checkbox" name="fig264" id="fig264">
+            <label for="fig264">264</label>
+                     
+             
+            <input type="checkbox" name="fig265" id="fig265">
+            <label for="fig265">265</label>
+            <input type="checkbox" name="fig266" id="fig266">
+            <label for="fig266">266</label>
+            <input type="checkbox" name="fig267" id="fig267">       
+            <label for="fig267">267</label>
+            <input type="checkbox" name="fig268" id="fig268">
+            <label for="fig268">268</label>
+            <input type="checkbox" name="fig269" id="fig269">
+            <label for="fig269">269</label>
+             
+
+     
+            <input type="checkbox" name="fig270" id="fig270">
+            <label for="fig270">270</label>             
+            <input type="checkbox" name="fig271" id="fig271">
+            <label for="fig271">271</label>
+            <input type="checkbox" name="fig272" id="fig272">
+            <label for="fig272">272</label>
+            <input type="checkbox" name="fig273" id="fig273">
+            <label for="fig273">273</label>
+            <input type="checkbox" name="fig274" id="fig274">
+            <label for="fig274">274</label>
+                     
+             
+            <input type="checkbox" name="fig275" id="fig275">
+            <label for="fig275">275</label>
+            <input type="checkbox" name="fig276" id="fig276">
+            <label for="fig276">276</label>
+            <input type="checkbox" name="fig277" id="fig277">       
+            <label for="fig277">277</label>
+            <input type="checkbox" name="fig278" id="fig278">
+            <label for="fig278">278</label>
+            <input type="checkbox" name="fig279" id="fig279">
+            <label for="fig279">279</label>
+             
+
+
+     
+            <input type="checkbox" name="fig280" id="fig280">
+            <label for="fig280">280</label>             
+            <input type="checkbox" name="fig281" id="fig281">
+            <label for="fig281">281</label>
+            <input type="checkbox" name="fig282" id="fig282">
+            <label for="fig282">282</label>
+            <input type="checkbox" name="fig283" id="fig283">
+            <label for="fig283">283</label>
+            <input type="checkbox" name="fig284" id="fig284">
+            <label for="fig284">284</label>
+                     
+             
+            <input type="checkbox" name="fig285" id="fig285">
+            <label for="fig285">285</label>
+            <input type="checkbox" name="fig286" id="fig286">
+            <label for="fig286">286</label>
+            <input type="checkbox" name="fig287" id="fig287">       
+            <label for="fig287">287</label>
+            <input type="checkbox" name="fig288" id="fig288">
+            <label for="fig288">288</label>
+            <input type="checkbox" name="fig289" id="fig289">
+            <label for="fig289">289</label>
+             
+
+     
+            <input type="checkbox" name="fig290" id="fig290">
+            <label for="fig290">290</label>             
+            <input type="checkbox" name="fig291" id="fig291">
+            <label for="fig291">291</label>
+            <input type="checkbox" name="fig292" id="fig292">
+            <label for="fig292">292</label>
+            <input type="checkbox" name="fig293" id="fig293">
+            <label for="fig293">293</label>
+            <input type="checkbox" name="fig294" id="fig294">
+            <label for="fig294">294</label>
+                     
+             
+            <input type="checkbox" name="fig295" id="fig295">   
+            <label for="fig295">295</label>
+            <input type="checkbox" name="fig296" id="fig296">
+            <label for="fig296">296</label>
+            <input type="checkbox" name="fig297" id="fig297">       
+            <label for="fig297">297</label>
+            <input type="checkbox" name="fig298" id="fig298">
+            <label for="fig298">298</label>
+            <input type="checkbox" name="fig299" id="fig299">
+            <label for="fig299">299</label>
+             
+        </fieldset> 
+
+    </div>
+    
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div>
+
+
+<div data-role="page" data-title="Repetidas" id="pag4">
+    <div data-role="header">
+        <h1>Repetidas</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">Faltantes</a></li>
+                <li><a href="#pag2" class="ui-btn-active ui-state-persist">100-199</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+                <li><a href="#pag4" class="ui-btn-active ui-state-persist">300-399</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+      <fieldset data-role="controlgroup" data-type="horizontal">      
+
+            <input type="checkbox" name="fig300" id="fig300">
+            <label for="fig300">300</label>             
+            <input type="checkbox" name="fig301" id="fig301">
+            <label for="fig301">301</label>
+            <input type="checkbox" name="fig302" id="fig302">
+            <label for="fig302">302</label>
+            <input type="checkbox" name="fig303" id="fig303">
+            <label for="fig303">303</label>
+            <input type="checkbox" name="fig304" id="fig304">
+            <label for="fig304">304</label>
+                     
+     
+            <input type="checkbox" name="fig305" id="fig305">
+            <label for="fig305">305</label>
+            <input type="checkbox" name="fig306" id="fig306">
+            <label for="fig306">306</label>
+            <input type="checkbox" name="fig307" id="fig307">       
+            <label for="fig307">307</label>
+            <input type="checkbox" name="fig308" id="fig308">
+            <label for="fig308">308</label>
+            <input type="checkbox" name="fig309" id="fig309">
+            <label for="fig309">309</label>
+             
+     
+            <input type="checkbox" name="fig310" id="fig310">
+            <label for="fig310">310</label>
+            <input type="checkbox" name="fig311" id="fig311">
+            <label for="fig311">311</label>
+            <input type="checkbox" name="fig312" id="fig312">
+            <label for="fig312">312</label>
+            <input type="checkbox" name="fig313" id="fig313">
+            <label for="fig313">313</label>
+            <input type="checkbox" name="fig314" id="fig314">
+            <label for="fig314">314</label>
+                     
+         
+            <input type="checkbox" name="fig315" id="fig315">
+            <label for="fig315">315</label>
+            <input type="checkbox" name="fig316" id="fig316">
+            <label for="fig316">316</label>
+            <input type="checkbox" name="fig317" id="fig317">       
+            <label for="fig317">317</label>
+            <input type="checkbox" name="fig318" id="fig318">
+            <label for="fig318">318</label>
+            <input type="checkbox" name="fig319" id="fig319">
+            <label for="fig319">319</label>
+         
+     
+            <input type="checkbox" name="fig320" id="fig320">
+            <label for="fig320">320</label>     
+            <input type="checkbox" name="fig321" id="fig321">
+            <label for="fig321">321</label>
+            <input type="checkbox" name="fig322" id="fig322">
+            <label for="fig322">322</label>
+            <input type="checkbox" name="fig323" id="fig323">
+            <label for="fig323">323</label>
+            <input type="checkbox" name="fig324" id="fig324">
+            <label for="fig324">324</label>
+                     
+             
+            <input type="checkbox" name="fig325" id="fig325">
+            <label for="fig325">325</label>
+            <input type="checkbox" name="fig326" id="fig326">
+            <label for="fig326">326</label>
+            <input type="checkbox" name="fig327" id="fig327">       
+            <label for="fig327">327</label>
+            <input type="checkbox" name="fig328" id="fig328">
+            <label for="fig328">328</label>
+            <input type="checkbox" name="fig329" id="fig329">
+            <label for="fig329">329</label>
+        
+     
+            <input type="checkbox" name="fig330" id="fig330">
+            <label for="fig330">330</label>             
+            <input type="checkbox" name="fig331" id="fig331">
+            <label for="fig331">331</label>
+            <input type="checkbox" name="fig332" id="fig332">
+            <label for="fig332">332</label>
+            <input type="checkbox" name="fig333" id="fig333">
+            <label for="fig333">333</label>
+            <input type="checkbox" name="fig334" id="fig334">
+            <label for="fig334">334</label>
+                     
+             
+            <input type="checkbox" name="fig335" id="fig335">
+            <label for="fig335">335</label>
+            <input type="checkbox" name="fig336" id="fig336">
+            <label for="fig336">336</label>
+            <input type="checkbox" name="fig337" id="fig337">       
+            <label for="fig337">337</label>
+            <input type="checkbox" name="fig338" id="fig338">
+            <label for="fig338">338</label>
+            <input type="checkbox" name="fig339" id="fig339">
+            <label for="fig339">339</label>
+         
+        
+     
+            <input type="checkbox" name="fig340" id="fig340">
+            <label for="fig340">340</label>             
+            <input type="checkbox" name="fig341" id="fig341">
+            <label for="fig341">341</label>
+            <input type="checkbox" name="fig342" id="fig342">
+            <label for="fig342">342</label>
+            <input type="checkbox" name="fig343" id="fig343">
+            <label for="fig343">343</label>
+            <input type="checkbox" name="fig344" id="fig344">
+            <label for="fig344">344</label>
+                     
+         
+            <input type="checkbox" name="fig345" id="fig345">
+            <label for="fig345">345</label>
+            <input type="checkbox" name="fig346" id="fig346">
+            <label for="fig346">346</label>
+            <input type="checkbox" name="fig347" id="fig347">       
+            <label for="fig347">347</label>
+            <input type="checkbox" name="fig348" id="fig348">
+            <label for="fig348">348</label>
+            <input type="checkbox" name="fig349" id="fig349">
+            <label for="fig349">349</label>
+         
+
+        
+     
+            <input type="checkbox" name="fig350" id="fig350">
+            <label for="fig350">350</label>             
+            <input type="checkbox" name="fig351" id="fig351">
+            <label for="fig351">351</label>
+            <input type="checkbox" name="fig352" id="fig352">
+            <label for="fig352">352</label>
+            <input type="checkbox" name="fig353" id="fig353">
+            <label for="fig353">353</label>
+            <input type="checkbox" name="fig354" id="fig354">
+            <label for="fig354">354</label>
+                     
+             
+            <input type="checkbox" name="fig355" id="fig355">
+            <label for="fig355">355</label>
+            <input type="checkbox" name="fig356" id="fig356">
+            <label for="fig356">356</label>
+            <input type="checkbox" name="fig357" id="fig357">       
+            <label for="fig357">357</label>
+            <input type="checkbox" name="fig358" id="fig358">
+            <label for="fig358">358</label>
+            <input type="checkbox" name="fig359" id="fig359">
+            <label for="fig359">359</label>
+             
+
+     
+            <input type="checkbox" name="fig360" id="fig360">
+            <label for="fig360">360</label>             
+            <input type="checkbox" name="fig361" id="fig361">
+            <label for="fig361">361</label>
+            <input type="checkbox" name="fig362" id="fig362">
+            <label for="fig362">362</label>
+            <input type="checkbox" name="fig363" id="fig363">
+            <label for="fig363">363</label>
+            <input type="checkbox" name="fig364" id="fig364">
+            <label for="fig364">364</label>
+                     
+             
+            <input type="checkbox" name="fig365" id="fig365">
+            <label for="fig365">365</label>
+            <input type="checkbox" name="fig366" id="fig366">
+            <label for="fig366">366</label>
+            <input type="checkbox" name="fig367" id="fig367">       
+            <label for="fig367">367</label>
+            <input type="checkbox" name="fig368" id="fig368">
+            <label for="fig368">368</label>
+            <input type="checkbox" name="fig369" id="fig369">
+            <label for="fig369">369</label>
+             
+
+     
+            <input type="checkbox" name="fig370" id="fig370">
+            <label for="fig370">370</label>             
+            <input type="checkbox" name="fig371" id="fig371">
+            <label for="fig371">371</label>
+            <input type="checkbox" name="fig372" id="fig372">
+            <label for="fig372">372</label>
+            <input type="checkbox" name="fig373" id="fig373">
+            <label for="fig373">373</label>
+            <input type="checkbox" name="fig374" id="fig374">
+            <label for="fig374">374</label>
+                     
+             
+            <input type="checkbox" name="fig375" id="fig375">
+            <label for="fig375">375</label>
+            <input type="checkbox" name="fig376" id="fig376">
+            <label for="fig376">376</label>
+            <input type="checkbox" name="fig377" id="fig377">       
+            <label for="fig377">377</label>
+            <input type="checkbox" name="fig378" id="fig378">
+            <label for="fig378">378</label>
+            <input type="checkbox" name="fig379" id="fig379">
+            <label for="fig379">379</label>
+             
+
+
+     
+            <input type="checkbox" name="fig380" id="fig380">
+            <label for="fig380">380</label>             
+            <input type="checkbox" name="fig381" id="fig381">
+            <label for="fig381">381</label>
+            <input type="checkbox" name="fig382" id="fig382">
+            <label for="fig382">382</label>
+            <input type="checkbox" name="fig383" id="fig383">
+            <label for="fig383">383</label>
+            <input type="checkbox" name="fig384" id="fig384">
+            <label for="fig384">384</label>
+                     
+             
+            <input type="checkbox" name="fig385" id="fig385">
+            <label for="fig385">385</label>
+            <input type="checkbox" name="fig386" id="fig386">
+            <label for="fig386">386</label>
+            <input type="checkbox" name="fig387" id="fig387">       
+            <label for="fig387">387</label>
+            <input type="checkbox" name="fig388" id="fig388">
+            <label for="fig388">388</label>
+            <input type="checkbox" name="fig389" id="fig389">
+            <label for="fig389">389</label>
+             
+
+     
+            <input type="checkbox" name="fig390" id="fig390">
+            <label for="fig390">390</label>             
+            <input type="checkbox" name="fig391" id="fig391">
+            <label for="fig391">391</label>
+            <input type="checkbox" name="fig392" id="fig392">
+            <label for="fig392">392</label>
+            <input type="checkbox" name="fig393" id="fig393">
+            <label for="fig393">393</label>
+            <input type="checkbox" name="fig394" id="fig394">
+            <label for="fig394">394</label>
+                     
+             
+            <input type="checkbox" name="fig395" id="fig395">   
+            <label for="fig395">395</label>
+            <input type="checkbox" name="fig396" id="fig396">
+            <label for="fig396">396</label>
+            <input type="checkbox" name="fig397" id="fig397">       
+            <label for="fig397">397</label>
+            <input type="checkbox" name="fig398" id="fig398">
+            <label for="fig398">398</label>
+            <input type="checkbox" name="fig399" id="fig399">
+            <label for="fig399">399</label>
+             
+     
+       
+        </fieldset> 
+
+    </div>
+    
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div>
+
+<div data-role="page" data-title="Repetidas" id="pag5">
+    <div data-role="header">
+        <h1>Repetidas</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">Faltantes</a></li>
+                <li><a href="#pag2" class="ui-btn-active ui-state-persist">100-199</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+                <li><a href="#pag4" class="ui-btn-active ui-state-persist">300-399</a></li>
+                <li><a href="#pag5" class="ui-btn-active ui-state-persist">400-499</a></li>
+
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+      <fieldset data-role="controlgroup" data-type="horizontal">      
+
+
+
+
+<input type="checkbox" name="fig400" id="fig400">
+            <label for="fig400">400</label>             
+            <input type="checkbox" name="fig401" id="fig401">
+            <label for="fig401">401</label>
+            <input type="checkbox" name="fig402" id="fig402">
+            <label for="fig402">402</label>
+            <input type="checkbox" name="fig403" id="fig403">
+            <label for="fig403">403</label>
+            <input type="checkbox" name="fig404" id="fig404">
+            <label for="fig404">404</label>
+                     
+     
+            <input type="checkbox" name="fig405" id="fig405">
+            <label for="fig405">405</label>
+            <input type="checkbox" name="fig406" id="fig406">
+            <label for="fig406">406</label>
+            <input type="checkbox" name="fig407" id="fig407">       
+            <label for="fig407">407</label>
+            <input type="checkbox" name="fig408" id="fig408">
+            <label for="fig408">408</label>
+            <input type="checkbox" name="fig409" id="fig409">
+            <label for="fig409">409</label>
+             
+     
+            <input type="checkbox" name="fig410" id="fig410">
+            <label for="fig410">410</label>
+            <input type="checkbox" name="fig411" id="fig411">
+            <label for="fig411">411</label>
+            <input type="checkbox" name="fig412" id="fig412">
+            <label for="fig412">412</label>
+            <input type="checkbox" name="fig413" id="fig413">
+            <label for="fig413">413</label>
+            <input type="checkbox" name="fig414" id="fig414">
+            <label for="fig414">414</label>
+                     
+         
+            <input type="checkbox" name="fig415" id="fig415">
+            <label for="fig415">415</label>
+            <input type="checkbox" name="fig416" id="fig416">
+            <label for="fig416">416</label>
+            <input type="checkbox" name="fig417" id="fig417">       
+            <label for="fig417">417</label>
+            <input type="checkbox" name="fig418" id="fig418">
+            <label for="fig418">418</label>
+            <input type="checkbox" name="fig419" id="fig419">
+            <label for="fig419">419</label>
+         
+     
+            <input type="checkbox" name="fig420" id="fig420">
+            <label for="fig420">420</label>     
+            <input type="checkbox" name="fig421" id="fig421">
+            <label for="fig421">421</label>
+            <input type="checkbox" name="fig422" id="fig422">
+            <label for="fig422">422</label>
+            <input type="checkbox" name="fig423" id="fig423">
+            <label for="fig423">423</label>
+            <input type="checkbox" name="fig424" id="fig424">
+            <label for="fig424">424</label>
+                     
+             
+            <input type="checkbox" name="fig425" id="fig425">
+            <label for="fig425">425</label>
+            <input type="checkbox" name="fig426" id="fig426">
+            <label for="fig426">426</label>
+            <input type="checkbox" name="fig427" id="fig427">       
+            <label for="fig427">427</label>
+            <input type="checkbox" name="fig428" id="fig428">
+            <label for="fig428">428</label>
+            <input type="checkbox" name="fig429" id="fig429">
+            <label for="fig429">429</label>
+        
+     
+            <input type="checkbox" name="fig430" id="fig430">
+            <label for="fig430">430</label>             
+            <input type="checkbox" name="fig431" id="fig431">
+            <label for="fig431">431</label>
+            <input type="checkbox" name="fig432" id="fig432">
+            <label for="fig432">432</label>
+            <input type="checkbox" name="fig433" id="fig433">
+            <label for="fig433">433</label>
+            <input type="checkbox" name="fig434" id="fig434">
+            <label for="fig434">434</label>
+                     
+             
+            <input type="checkbox" name="fig435" id="fig435">
+            <label for="fig435">435</label>
+            <input type="checkbox" name="fig436" id="fig436">
+            <label for="fig436">436</label>
+            <input type="checkbox" name="fig437" id="fig437">       
+            <label for="fig437">437</label>
+            <input type="checkbox" name="fig438" id="fig438">
+            <label for="fig438">438</label>
+            <input type="checkbox" name="fig439" id="fig439">
+            <label for="fig439">439</label>
+         
+        
+     
+            <input type="checkbox" name="fig440" id="fig440">
+            <label for="fig440">440</label>             
+            <input type="checkbox" name="fig441" id="fig441">
+            <label for="fig441">441</label>
+            <input type="checkbox" name="fig442" id="fig442">
+            <label for="fig442">442</label>
+            <input type="checkbox" name="fig443" id="fig443">
+            <label for="fig443">443</label>
+            <input type="checkbox" name="fig444" id="fig444">
+            <label for="fig444">444</label>
+                     
+         
+            <input type="checkbox" name="fig445" id="fig445">
+            <label for="fig445">445</label>
+            <input type="checkbox" name="fig446" id="fig446">
+            <label for="fig446">446</label>
+            <input type="checkbox" name="fig447" id="fig447">       
+            <label for="fig447">447</label>
+            <input type="checkbox" name="fig448" id="fig448">
+            <label for="fig448">448</label>
+            <input type="checkbox" name="fig449" id="fig449">
+            <label for="fig449">449</label>
+         
+
+        
+     
+            <input type="checkbox" name="fig450" id="fig450">
+            <label for="fig450">450</label>             
+            <input type="checkbox" name="fig451" id="fig451">
+            <label for="fig451">451</label>
+            <input type="checkbox" name="fig452" id="fig452">
+            <label for="fig452">452</label>
+            <input type="checkbox" name="fig453" id="fig453">
+            <label for="fig453">453</label>
+            <input type="checkbox" name="fig454" id="fig454">
+            <label for="fig454">454</label>
+                     
+             
+            <input type="checkbox" name="fig455" id="fig455">
+            <label for="fig455">455</label>
+            <input type="checkbox" name="fig456" id="fig456">
+            <label for="fig456">456</label>
+            <input type="checkbox" name="fig457" id="fig457">       
+            <label for="fig457">457</label>
+            <input type="checkbox" name="fig458" id="fig458">
+            <label for="fig458">458</label>
+            <input type="checkbox" name="fig459" id="fig459">
+            <label for="fig459">459</label>
+             
+
+     
+            <input type="checkbox" name="fig460" id="fig460">
+            <label for="fig460">460</label>             
+            <input type="checkbox" name="fig461" id="fig461">
+            <label for="fig461">461</label>
+            <input type="checkbox" name="fig462" id="fig462">
+            <label for="fig462">462</label>
+            <input type="checkbox" name="fig463" id="fig463">
+            <label for="fig463">463</label>
+            <input type="checkbox" name="fig464" id="fig464">
+            <label for="fig464">464</label>
+                     
+             
+            <input type="checkbox" name="fig465" id="fig465">
+            <label for="fig465">465</label>
+            <input type="checkbox" name="fig466" id="fig466">
+            <label for="fig466">466</label>
+            <input type="checkbox" name="fig467" id="fig467">       
+            <label for="fig467">467</label>
+            <input type="checkbox" name="fig468" id="fig468">
+            <label for="fig468">468</label>
+            <input type="checkbox" name="fig469" id="fig469">
+            <label for="fig469">469</label>
+             
+
+     
+            <input type="checkbox" name="fig470" id="fig470">
+            <label for="fig470">470</label>             
+            <input type="checkbox" name="fig471" id="fig471">
+            <label for="fig471">471</label>
+            <input type="checkbox" name="fig472" id="fig472">
+            <label for="fig472">472</label>
+            <input type="checkbox" name="fig473" id="fig473">
+            <label for="fig473">473</label>
+            <input type="checkbox" name="fig474" id="fig474">
+            <label for="fig474">474</label>
+                     
+             
+            <input type="checkbox" name="fig475" id="fig475">
+            <label for="fig475">475</label>
+            <input type="checkbox" name="fig476" id="fig476">
+            <label for="fig476">476</label>
+            <input type="checkbox" name="fig477" id="fig477">       
+            <label for="fig477">477</label>
+            <input type="checkbox" name="fig478" id="fig478">
+            <label for="fig478">478</label>
+            <input type="checkbox" name="fig479" id="fig479">
+            <label for="fig479">479</label>
+             
+
+
+     
+            <input type="checkbox" name="fig480" id="fig480">
+            <label for="fig480">480</label>             
+            <input type="checkbox" name="fig481" id="fig481">
+            <label for="fig481">481</label>
+            <input type="checkbox" name="fig482" id="fig482">
+            <label for="fig482">482</label>
+            <input type="checkbox" name="fig483" id="fig483">
+            <label for="fig483">483</label>
+            <input type="checkbox" name="fig484" id="fig484">
+            <label for="fig484">484</label>
+                     
+             
+            <input type="checkbox" name="fig485" id="fig485">
+            <label for="fig485">485</label>
+            <input type="checkbox" name="fig486" id="fig486">
+            <label for="fig486">486</label>
+            <input type="checkbox" name="fig487" id="fig487">       
+            <label for="fig487">487</label>
+            <input type="checkbox" name="fig488" id="fig488">
+            <label for="fig488">488</label>
+            <input type="checkbox" name="fig489" id="fig489">
+            <label for="fig489">489</label>
+             
+
+     
+            <input type="checkbox" name="fig490" id="fig490">
+            <label for="fig490">490</label>             
+            <input type="checkbox" name="fig491" id="fig491">
+            <label for="fig491">491</label>
+            <input type="checkbox" name="fig492" id="fig492">
+            <label for="fig492">492</label>
+            <input type="checkbox" name="fig493" id="fig493">
+            <label for="fig493">493</label>
+            <input type="checkbox" name="fig494" id="fig494">
+            <label for="fig494">494</label>
+                     
+             
+            <input type="checkbox" name="fig495" id="fig495">   
+            <label for="fig495">495</label>
+            <input type="checkbox" name="fig496" id="fig496">
+            <label for="fig496">496</label>
+            <input type="checkbox" name="fig497" id="fig497">       
+            <label for="fig497">497</label>
+            <input type="checkbox" name="fig498" id="fig498">
+            <label for="fig498">498</label>
+            <input type="checkbox" name="fig499" id="fig499">
+            <label for="fig499">499</label>
+            
+
+
+
+        </fieldset> 
+
+    </div>
+    
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div>
+
+
+<div data-role="page" data-title="Repetidas" id="pag6">
+    <div data-role="header">
+        <h1>Repetidas</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">Faltantes</a></li>
+                <li><a href="#pag2" class="ui-btn-active ui-state-persist">100-199</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+                <li><a href="#pag4" class="ui-btn-active ui-state-persist">300-399</a></li>
+                <li><a href="#pag5" class="ui-btn-active ui-state-persist">400-499</a></li>
+                <li><a href="#pag6" class="ui-btn-active ui-state-persist">500-599</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+      <fieldset data-role="controlgroup" data-type="horizontal">      
+     
+            <input type="checkbox" name="fig500" id="fig500">
+            <label for="fig500">500</label>             
+            <input type="checkbox" name="fig501" id="fig501">
+            <label for="fig501">501</label>
+            <input type="checkbox" name="fig502" id="fig502">
+            <label for="fig502">502</label>
+            <input type="checkbox" name="fig503" id="fig503">
+            <label for="fig503">503</label>
+            <input type="checkbox" name="fig504" id="fig504">
+            <label for="fig504">504</label>
+                     
+     
+            <input type="checkbox" name="fig505" id="fig505">
+            <label for="fig505">505</label>
+            <input type="checkbox" name="fig506" id="fig506">
+            <label for="fig506">506</label>
+            <input type="checkbox" name="fig507" id="fig507">       
+            <label for="fig507">507</label>
+            <input type="checkbox" name="fig508" id="fig508">
+            <label for="fig508">508</label>
+            <input type="checkbox" name="fig509" id="fig509">
+            <label for="fig509">509</label>
+             
+     
+            <input type="checkbox" name="fig510" id="fig510">
+            <label for="fig510">510</label>
+            <input type="checkbox" name="fig511" id="fig511">
+            <label for="fig511">511</label>
+            <input type="checkbox" name="fig512" id="fig512">
+            <label for="fig512">512</label>
+            <input type="checkbox" name="fig513" id="fig513">
+            <label for="fig513">513</label>
+            <input type="checkbox" name="fig514" id="fig514">
+            <label for="fig514">514</label>
+                     
+         
+            <input type="checkbox" name="fig515" id="fig515">
+            <label for="fig515">515</label>
+            <input type="checkbox" name="fig516" id="fig516">
+            <label for="fig516">516</label>
+            <input type="checkbox" name="fig517" id="fig517">       
+            <label for="fig517">517</label>
+            <input type="checkbox" name="fig518" id="fig518">
+            <label for="fig518">518</label>
+            <input type="checkbox" name="fig519" id="fig519">
+            <label for="fig519">519</label>
+         
+     
+            <input type="checkbox" name="fig520" id="fig520">
+            <label for="fig520">520</label>     
+            <input type="checkbox" name="fig521" id="fig521">
+            <label for="fig521">521</label>
+            <input type="checkbox" name="fig522" id="fig522">
+            <label for="fig522">522</label>
+            <input type="checkbox" name="fig523" id="fig523">
+            <label for="fig523">523</label>
+            <input type="checkbox" name="fig524" id="fig524">
+            <label for="fig524">524</label>
+                     
+             
+            <input type="checkbox" name="fig525" id="fig525">
+            <label for="fig525">525</label>
+            <input type="checkbox" name="fig526" id="fig526">
+            <label for="fig526">526</label>
+            <input type="checkbox" name="fig527" id="fig527">       
+            <label for="fig527">527</label>
+            <input type="checkbox" name="fig528" id="fig528">
+            <label for="fig528">528</label>
+            <input type="checkbox" name="fig529" id="fig529">
+            <label for="fig529">529</label>
+        
+     
+            <input type="checkbox" name="fig530" id="fig530">
+            <label for="fig530">530</label>             
+            <input type="checkbox" name="fig531" id="fig531">
+            <label for="fig531">531</label>
+            <input type="checkbox" name="fig532" id="fig532">
+            <label for="fig532">532</label>
+            <input type="checkbox" name="fig533" id="fig533">
+            <label for="fig533">533</label>
+            <input type="checkbox" name="fig534" id="fig534">
+            <label for="fig534">534</label>
+                     
+             
+            <input type="checkbox" name="fig535" id="fig535">
+            <label for="fig535">535</label>
+            <input type="checkbox" name="fig536" id="fig536">
+            <label for="fig536">536</label>
+            <input type="checkbox" name="fig537" id="fig537">       
+            <label for="fig537">537</label>
+            <input type="checkbox" name="fig538" id="fig538">
+            <label for="fig538">538</label>
+            <input type="checkbox" name="fig539" id="fig539">
+            <label for="fig539">539</label>
+         
+        
+     
+            <input type="checkbox" name="fig540" id="fig540">
+            <label for="fig540">540</label>             
+            <input type="checkbox" name="fig541" id="fig541">
+            <label for="fig541">541</label>
+            <input type="checkbox" name="fig542" id="fig542">
+            <label for="fig542">542</label>
+            <input type="checkbox" name="fig543" id="fig543">
+            <label for="fig543">543</label>
+            <input type="checkbox" name="fig544" id="fig544">
+            <label for="fig544">544</label>
+                     
+         
+            <input type="checkbox" name="fig545" id="fig545">
+            <label for="fig545">545</label>
+            <input type="checkbox" name="fig546" id="fig546">
+            <label for="fig546">546</label>
+            <input type="checkbox" name="fig547" id="fig547">       
+            <label for="fig547">547</label>
+            <input type="checkbox" name="fig548" id="fig548">
+            <label for="fig548">548</label>
+            <input type="checkbox" name="fig549" id="fig549">
+            <label for="fig549">549</label>
+         
+
+        
+     
+            <input type="checkbox" name="fig550" id="fig550">
+            <label for="fig550">550</label>             
+            <input type="checkbox" name="fig551" id="fig551">
+            <label for="fig551">551</label>
+            <input type="checkbox" name="fig552" id="fig552">
+            <label for="fig552">552</label>
+            <input type="checkbox" name="fig553" id="fig553">
+            <label for="fig553">553</label>
+            <input type="checkbox" name="fig554" id="fig554">
+            <label for="fig554">554</label>
+                     
+             
+            <input type="checkbox" name="fig555" id="fig555">
+            <label for="fig555">555</label>
+            <input type="checkbox" name="fig556" id="fig556">
+            <label for="fig556">556</label>
+            <input type="checkbox" name="fig557" id="fig557">       
+            <label for="fig557">557</label>
+            <input type="checkbox" name="fig558" id="fig558">
+            <label for="fig558">558</label>
+            <input type="checkbox" name="fig559" id="fig559">
+            <label for="fig559">559</label>
+             
+
+     
+            <input type="checkbox" name="fig560" id="fig560">
+            <label for="fig560">560</label>             
+            <input type="checkbox" name="fig561" id="fig561">
+            <label for="fig561">561</label>
+            <input type="checkbox" name="fig562" id="fig562">
+            <label for="fig562">562</label>
+            <input type="checkbox" name="fig563" id="fig563">
+            <label for="fig563">563</label>
+            <input type="checkbox" name="fig564" id="fig564">
+            <label for="fig564">564</label>
+                     
+             
+            <input type="checkbox" name="fig565" id="fig565">
+            <label for="fig565">565</label>
+            <input type="checkbox" name="fig566" id="fig566">
+            <label for="fig566">566</label>
+            <input type="checkbox" name="fig567" id="fig567">       
+            <label for="fig567">567</label>
+            <input type="checkbox" name="fig568" id="fig568">
+            <label for="fig568">568</label>
+            <input type="checkbox" name="fig569" id="fig569">
+            <label for="fig569">569</label>
+             
+
+     
+            <input type="checkbox" name="fig570" id="fig570">
+            <label for="fig570">570</label>             
+            <input type="checkbox" name="fig571" id="fig571">
+            <label for="fig571">571</label>
+            <input type="checkbox" name="fig572" id="fig572">
+            <label for="fig572">572</label>
+            <input type="checkbox" name="fig573" id="fig573">
+            <label for="fig573">573</label>
+            <input type="checkbox" name="fig574" id="fig574">
+            <label for="fig574">574</label>
+                     
+             
+            <input type="checkbox" name="fig575" id="fig575">
+            <label for="fig575">575</label>
+            <input type="checkbox" name="fig576" id="fig576">
+            <label for="fig576">576</label>
+            <input type="checkbox" name="fig577" id="fig577">       
+            <label for="fig577">577</label>
+            <input type="checkbox" name="fig578" id="fig578">
+            <label for="fig578">578</label>
+            <input type="checkbox" name="fig579" id="fig579">
+            <label for="fig579">579</label>
+     
+            <input type="checkbox" name="fig580" id="fig580">
+            <label for="fig580">580</label>             
+            <input type="checkbox" name="fig581" id="fig581">
+            <label for="fig581">581</label>
+            <input type="checkbox" name="fig582" id="fig582">
+            <label for="fig582">582</label>
+            <input type="checkbox" name="fig583" id="fig583">
+            <label for="fig583">583</label>
+            <input type="checkbox" name="fig584" id="fig584">
+            <label for="fig584">584</label>
+             
+            <input type="checkbox" name="fig585" id="fig585">
+            <label for="fig585">585</label>
+            <input type="checkbox" name="fig586" id="fig586">
+            <label for="fig586">586</label>
+            <input type="checkbox" name="fig587" id="fig587">       
+            <label for="fig587">587</label>
+            <input type="checkbox" name="fig588" id="fig588">
+            <label for="fig588">588</label>
+            <input type="checkbox" name="fig589" id="fig589">
+            <label for="fig589">589</label>
+             
+
+     
+            <input type="checkbox" name="fig590" id="fig590">
+            <label for="fig590">590</label>             
+            <input type="checkbox" name="fig591" id="fig591">
+            <label for="fig591">591</label>
+            <input type="checkbox" name="fig592" id="fig592">
+            <label for="fig592">592</label>
+            <input type="checkbox" name="fig593" id="fig593">
+            <label for="fig593">593</label>
+            <input type="checkbox" name="fig594" id="fig594">
+            <label for="fig594">594</label>
+                     
+            <input type="checkbox" name="fig595" id="fig595">   
+            <label for="fig595">595</label>
+            <input type="checkbox" name="fig596" id="fig596">
+            <label for="fig596">596</label>
+            <input type="checkbox" name="fig597" id="fig597">       
+            <label for="fig597">597</label>
+            <input type="checkbox" name="fig598" id="fig598">
+            <label for="fig598">598</label>
+            <input type="checkbox" name="fig599" id="fig599">
+            <label for="fig599">599</label>
+        </fieldset> 
+    </div>
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div>
+
+
+<div data-role="page" data-title="Repetidas" id="pag6">
+    <div data-role="header">
+        <h1>Repetidas</h1>
+        <div data-role="navbar">
+            <ul>
+                <li><a href="#home">Faltantes</a></li>
+                <li><a href="#pag2" class="ui-btn-active ui-state-persist">100-199</a></li>
+                <li><a href="#pag3" class="ui-btn-active ui-state-persist">200-299</a></li>
+                <li><a href="#pag4" class="ui-btn-active ui-state-persist">300-399</a></li>
+                <li><a href="#pag5" class="ui-btn-active ui-state-persist">400-499</a></li>
+                <li><a href="#pag6" class="ui-btn-active ui-state-persist">500-599</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div data-role="content">
+      <fieldset data-role="controlgroup" data-type="horizontal">      
+     
+
+
+
+            <input type="checkbox" name="fig600" id="fig600">
+            <label for="fig600">600</label>             
+            <input type="checkbox" name="fig601" id="fig601">
+            <label for="fig601">601</label>
+            <input type="checkbox" name="fig602" id="fig602">
+            <label for="fig602">602</label>
+            <input type="checkbox" name="fig603" id="fig603">
+            <label for="fig603">603</label>
+            <input type="checkbox" name="fig604" id="fig604">
+            <label for="fig604">604</label>
+                     
+     
+            <input type="checkbox" name="fig605" id="fig605">
+            <label for="fig605">605</label>
+            <input type="checkbox" name="fig606" id="fig606">
+            <label for="fig606">606</label>
+            <input type="checkbox" name="fig607" id="fig607">       
+            <label for="fig607">607</label>
+            <input type="checkbox" name="fig608" id="fig608">
+            <label for="fig608">608</label>
+            <input type="checkbox" name="fig609" id="fig609">
+            <label for="fig609">609</label>
+             
+     
+            <input type="checkbox" name="fig610" id="fig610">
+            <label for="fig610">610</label>
+            <input type="checkbox" name="fig611" id="fig611">
+            <label for="fig611">611</label>
+            <input type="checkbox" name="fig612" id="fig612">
+            <label for="fig612">612</label>
+            <input type="checkbox" name="fig613" id="fig613">
+            <label for="fig613">613</label>
+            <input type="checkbox" name="fig614" id="fig614">
+            <label for="fig614">614</label>
+                     
+         
+            <input type="checkbox" name="fig615" id="fig615">
+            <label for="fig615">615</label>
+            <input type="checkbox" name="fig616" id="fig616">
+            <label for="fig616">616</label>
+            <input type="checkbox" name="fig617" id="fig617">       
+            <label for="fig617">617</label>
+            <input type="checkbox" name="fig618" id="fig618">
+            <label for="fig618">618</label>
+            <input type="checkbox" name="fig619" id="fig619">
+            <label for="fig619">619</label>
+         
+     
+            <input type="checkbox" name="fig620" id="fig620">
+            <label for="fig620">620</label>     
+            <input type="checkbox" name="fig621" id="fig621">
+            <label for="fig621">621</label>
+            <input type="checkbox" name="fig622" id="fig622">
+            <label for="fig622">622</label>
+            <input type="checkbox" name="fig623" id="fig623">
+            <label for="fig623">623</label>
+            <input type="checkbox" name="fig624" id="fig624">
+            <label for="fig624">624</label>
+                     
+             
+            <input type="checkbox" name="fig625" id="fig625">
+            <label for="fig625">625</label>
+            <input type="checkbox" name="fig626" id="fig626">
+            <label for="fig626">626</label>
+            <input type="checkbox" name="fig627" id="fig627">       
+            <label for="fig627">627</label>
+            <input type="checkbox" name="fig628" id="fig628">
+            <label for="fig628">628</label>
+            <input type="checkbox" name="fig629" id="fig629">
+            <label for="fig629">629</label>
+        
+     
+            <input type="checkbox" name="fig630" id="fig630">
+            <label for="fig630">630</label>             
+            <input type="checkbox" name="fig631" id="fig631">
+            <label for="fig631">631</label>
+            <input type="checkbox" name="fig632" id="fig632">
+            <label for="fig632">632</label>
+            <input type="checkbox" name="fig633" id="fig633">
+            <label for="fig633">633</label>
+            <input type="checkbox" name="fig634" id="fig634">
+            <label for="fig634">634</label>
+                     
+             
+            <input type="checkbox" name="fig635" id="fig635">
+            <label for="fig635">635</label>
+            <input type="checkbox" name="fig636" id="fig636">
+            <label for="fig636">636</label>
+            <input type="checkbox" name="fig637" id="fig637">       
+            <label for="fig637">637</label>
+            <input type="checkbox" name="fig638" id="fig638">
+            <label for="fig638">638</label>
+            <input type="checkbox" name="fig639" id="fig639">
+            <label for="fig639">639</label>
+     
+
+        </fieldset> 
+
+    </div>
+    
+    <div data-role="footer">
+        <small>&#169; 2014</small>
+    </div>
+</div>
+
+</form></body>
+</html>
