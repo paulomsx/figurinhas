@@ -1,9 +1,11 @@
 var local = new Local(); 
 
-
 $(document).ready(function() {
 
-    $(".titulo").html("COPA DO MUNDO 2018");
+    
+    carregar_html("principal.html","principal");
+    $(".titulo").html("COPA 2018");
+    
     let contador = 0;
     for (k = 0; k <= 6 ; k++) { 
         menu("menu_pag"+k,"pag"+k);
@@ -26,11 +28,9 @@ $(document).ready(function() {
 
      /**********************************************************************/
      $( "input[type='checkbox']" ).change(function() {
-
         let dados = local.Get();
         let pos = parseInt($(this).attr('id').replace("fig",""),10);
         local.Put(substituiCharPosicao(dados,pos,dados.substring(pos,pos+1)=="0" ? "1" : "0"));
-
      });                
     /**********************************************************************/
 
@@ -114,3 +114,10 @@ function AtualizaFigurinhas(){
 function substituiCharPosicao(s,  pos, c) {
     return s.substring(0,pos) + c + s.substring(pos+1);
 }
+
+function carregar_html(pagina, div){
+    $("#"+div).load(pagina, function() {
+        $(this).trigger('create');
+    });
+}
+
