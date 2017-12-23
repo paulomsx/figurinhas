@@ -5,13 +5,15 @@ $(document).ready(function() {
     
     carregar_html("principal.html","principal");
     $(".titulo").html("COPA 2018");
-    
+
     let contador = 0;
     for (k = 0; k <= 6 ; k++) { 
         menu("menu_pag"+k,"pag"+k);
         $(carrega_conteudo(contador)).appendTo( "#contenudo"+k ).enhanceWithin();
         contador+=100;
     }
+
+    rodape();
 
     /**********************************************************************/
     /* INI - LOCAL DADOS */
@@ -36,12 +38,28 @@ $(document).ready(function() {
 
 });
 
+function rodape(){
+
+    let rodape = `
+    <div data-role="footer">
+        <small>&#169; ÁLBUM DA 2008</spam></small>
+    </div>`;
+
+    $(".rodape").html(rodape);
+}
+
 /**************************************************************************************************/
 function menu(menu,opcao){
+    
     return new Promise((resolve, reject) => {
-        var _menu =`
+
+
+        let _menu =`
+        <div data-role="header" data-theme="b">
+        <h1>COPA 2018</h1>
+        <div data-role="navbar">
         <ul>
-            <li><a href="#inicio" ${opcaoMenu(opcao,'inicio')}>INÍCIO</a></li>
+            <li><a href="#inicio">INÍCIO</a></li>
             <li><a href="#pag0"   ${opcaoMenu(opcao,'pag0')}>000-099</a></li>
             <li><a href="#pag1"   ${opcaoMenu(opcao,'pag1')}>100-199</a></li>
             <li><a href="#pag2"   ${opcaoMenu(opcao,'pag2')}>200-299</a></li>
@@ -49,10 +67,12 @@ function menu(menu,opcao){
             <li><a href="#pag4"   ${opcaoMenu(opcao,'pag4')}>400-499</a></li>
             <li><a href="#pag5"   ${opcaoMenu(opcao,'pag5')}>500-599</a></li>
             <li><a href="#pag6"   ${opcaoMenu(opcao,'pag6')}>600-639</a></li>            
-        </ul>`;
+        </ul>
+        </div></div>`;
 
         //$("#"+menu).append(_menu);
-        $( _menu ).appendTo( "#"+menu ).enhanceWithin();
+        $( _menu ).appendTo( "#"+menu );
+      
         resolve();    
     });	
 }   
@@ -90,12 +110,21 @@ function carrega_conteudo(valor){
 
     if (valor==600) inc=40;
 
+    conteudo+=`
+    <div data-role="content">
+    <fieldset data-role="controlgroup" data-type="horizontal" data-theme="b">`;
+
     for (i = valor; i < valor+inc; i++) { 
         let numero = zero3.pad(i);
+
         conteudo+=`
-            <input type="checkbox" name="fig${numero}" id="fig${numero}">
-            <label for="fig${numero}">${numero}</label>`;
+        <input type="checkbox" name="fig${numero}" id="fig${numero}">
+        <label for="fig${numero}">${numero}</label>`;
     }
+    conteudo+=`
+    </fieldset>
+    </div>`;
+
     return(conteudo); 
 }    
 
