@@ -4,22 +4,31 @@
 
 <div data-role="navbar">
     <ul>
-        <li><a href="#inicio" class="ui-btn-active ui-state-persist">INÍCIO</a></li>
-        <li><a href="#pag0">000-099</a></li>
-        <li><a href="#pag1">100-199</a></li>
-        <li><a href="#pag2">200-299</a></li>
-        <li><a href="#pag3">300-399</a></li>
-        <li><a href="#pag4">400-499</a></li>
-        <li><a href="#pag5">500-599</a></li>
-        <li><a href="#pag6">600-639</a></li>            
+        <li><a href="#inicio" class="ui-btn-active ui-state-persist" data-transition="none">INÍCIO</a></li>
+        <li><a href="#pag0" data-transition="none">000-099</a></li>
+        <li><a href="#pag1" data-transition="none">100-199</a></li>
+        <li><a href="#pag2" data-transition="none">200-299</a></li>
+        <li><a href="#pag3" data-transition="none">300-399</a></li>
+        <li><a href="#pag4" data-transition="none">400-499</a></li>
+        <li><a href="#pag5" data-transition="none">500-599</a></li>
+        <li><a href="#pag6" data-transition="none">600-639</a></li>            
     </ul>
 </div>
 
 <div data-role="content">
     <center>
-            <h2>BEM VINDO AO APICATIVO ÁLBUM DA COPA 2018</h2> 
+        <h2>ÁLBUM DA COPA 2018</h2> 
     </center>                    
-
+    
+    <div class="ui-field-contain">
+        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+            <legend>Minhas Figurinhas:</legend>
+            <input type="radio" name="rdMinhaFigurinhas" id="faltantes" value="faltantes">
+            <label for="faltantes">Faltantes</label>
+            <input type="radio" name="rdMinhaFigurinhas" id="repetidas" value="repetidas">
+            <label for="repetidas">Repetidas</label>
+        </fieldset>
+    </div>
     <div class="ui-grid-d ui-responsive">
         <div class="ui-block-a"><a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-arrow-l">Back to order</a></div>
         <div class="ui-block-b"><input type="button" data-icon="plus" value="Add products"></div>
@@ -28,8 +37,29 @@
         <div class="ui-block-a"><a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-arrow-l">Back to order</a></div>
         <div class="ui-block-b"><input type="button" data-icon="plus" value="Add products"></div>
         <div class="ui-block-c"><input type="button" data-icon="plus" value="Add products"></div>
-    
-    
     </div>
 </div>
+<div data-role="footer">
+    <small>&#169; ÁLBUM DA COPA 2008</spam></small>
+</div>
 
+<script>
+
+    if (tema == "a")
+        $("#faltantes").prop( "checked", true ); //.checkboxradio( "refresh" );
+    else
+        $("#repetidas").prop( "checked", true ); //.checkboxradio( "refresh" );
+    
+
+    $("input[type='radio']").bind( "change", function(event, ui) {
+        //event.preventDefault();
+        var rdbVal1 = $("input[name$=rdMinhaFigurinhas]:checked").val();
+        if (rdbVal1=="repetidas"){
+            objTema.Put("b");
+        }
+        else{
+            objTema.Put("a");
+        };
+        location.reload();       
+    });    
+</script>

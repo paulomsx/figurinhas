@@ -1,34 +1,17 @@
 var local = new Local(); 
+var objTema = new Tema(); 
+var tema;
 
 $(document).ready(function() {
-
+    
+    
+    tema=objTema.Get();
     
     carregar_html("principal.html","principal");
-    $(".titulo").html("COPA 2018");
 
-    let contador = 0;
-    for (k = 0; k <= 6 ; k++) { 
-        menu("menu_pag"+k,"pag"+k);
-        $(carrega_conteudo(contador)).appendTo( "#contenudo"+k ).enhanceWithin();
-        contador+=100;
-    }
-
-    rodape();
+    AtualizaTela();
 
     /**********************************************************************/
-    /* INI - LOCAL DADOS */
-    /**********************************************************************/
-    
-
-    AtualizaFigurinhas();
-    
-
-    /**********************************************************************/
-    /* FIM - LOCAL DADOS */
-    /**********************************************************************/
-
-
-     /**********************************************************************/
      $( "input[type='checkbox']" ).change(function() {
         let dados = local.Get();
         let pos = parseInt($(this).attr('id').replace("fig",""),10);
@@ -39,42 +22,66 @@ $(document).ready(function() {
 });
 
 function rodape(){
-
-    let rodape = `
+    $(".rodape").html(`
     <div data-role="footer">
-        <small>&#169; ÁLBUM DA 2008</spam></small>
-    </div>`;
+        <small>&#169; ÁLBUM DA COPA 2008</spam></small>
+    </div>`);
+}
 
-    $(".rodape").html(rodape);
+/**********************************************************************/
+
+function AtualizaTela(){
+        
+    let contador = 0;
+    for (k = 0; k <= 6 ; k++) { 
+        menu("menu_pag"+k,"pag"+k);
+        //$(carrega_conteudo(contador)).appendTo( "#contenudo"+k ).enhanceWithin();
+        $(carrega_conteudo(contador)).html("");
+
+        $(carrega_conteudo(contador)).appendTo( "#contenudo"+k );
+        contador+=100;
+    }
+
+    rodape();
+
+    /**********************************************************************/
+    /* INI - LOCAL DADOS */
+    /**********************************************************************/
+    AtualizaFigurinhas();
+    /**********************************************************************/
+    /* FIM - LOCAL DADOS */
+    /**********************************************************************/
 }
 
 /**************************************************************************************************/
 function menu(menu,opcao){
     
-    return new Promise((resolve, reject) => {
+    // return new Promise((resolve, reject) => {
 
 
         let _menu =`
-        <div data-role="header" data-theme="b">
-        <h1>COPA 2018</h1>
+        <div data-role="header" data-theme="${tema}">
+        <h3>COPA 2018</h3>
         <div data-role="navbar">
         <ul>
-            <li><a href="#inicio">INÍCIO</a></li>
-            <li><a href="#pag0"   ${opcaoMenu(opcao,'pag0')}>000-099</a></li>
-            <li><a href="#pag1"   ${opcaoMenu(opcao,'pag1')}>100-199</a></li>
-            <li><a href="#pag2"   ${opcaoMenu(opcao,'pag2')}>200-299</a></li>
-            <li><a href="#pag3"   ${opcaoMenu(opcao,'pag3')}>300-399</a></li>
-            <li><a href="#pag4"   ${opcaoMenu(opcao,'pag4')}>400-499</a></li>
-            <li><a href="#pag5"   ${opcaoMenu(opcao,'pag5')}>500-599</a></li>
-            <li><a href="#pag6"   ${opcaoMenu(opcao,'pag6')}>600-639</a></li>            
+            <li><a href="#inicio" data-transition="none">INÍCIO</a></li>
+            <li><a href="#pag0"   ${opcaoMenu(opcao,'pag0')} data-transition="none">000-099</a></li>
+            <li><a href="#pag1"   ${opcaoMenu(opcao,'pag1')} data-transition="none">100-199</a></li>
+            <li><a href="#pag2"   ${opcaoMenu(opcao,'pag2')} data-transition="none">200-299</a></li>
+            <li><a href="#pag3"   ${opcaoMenu(opcao,'pag3')} data-transition="none">300-399</a></li>
+            <li><a href="#pag4"   ${opcaoMenu(opcao,'pag4')} data-transition="none">400-499</a></li>
+            <li><a href="#pag5"   ${opcaoMenu(opcao,'pag5')} data-transition="none">500-599</a></li>
+            <li><a href="#pag6"   ${opcaoMenu(opcao,'pag6')} data-transition="none">600-639</a></li>            
         </ul>
-        </div></div>`;
+        </div>
+        </div>
+        `;
 
-        //$("#"+menu).append(_menu);
+        $("#"+menu).html("");
         $( _menu ).appendTo( "#"+menu );
       
-        resolve();    
-    });	
+    //     resolve();    
+    // });	
 }   
 
 function opcaoMenu(escolha,opcao){
@@ -112,7 +119,8 @@ function carrega_conteudo(valor){
 
     conteudo+=`
     <div data-role="content">
-    <fieldset data-role="controlgroup" data-type="horizontal" data-theme="b">`;
+    
+    <fieldset data-role="controlgroup" data-type="horizontal" data-theme="${tema}">`;
 
     for (i = valor; i < valor+inc; i++) { 
         let numero = zero3.pad(i);
@@ -150,3 +158,9 @@ function carregar_html(pagina, div){
     });
 }
 
+$("#repetidas").click(function(){
+    alert('clicked!');
+});
+
+		
+     
