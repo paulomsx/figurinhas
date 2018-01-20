@@ -1,0 +1,54 @@
+<div data-role="header">
+    <h1>COPA 2018</h1> 
+</div>                    
+<div data-role="content" style="padding: 10px;">
+    <div data-role="fieldcontain">
+        <label for="text-basic">E-mail:</label>
+        <input type="text" name="text-basic" id="email" value="">
+    </div>
+
+    <div data-role="fieldcontain">
+        <label for="password">Senha:</label>
+        <input type="password" name="senha" id="senha" value="" />
+    </div>	
+
+    <button type='submit' id='login'>Login</button>
+    
+    <h2 id='result'></h2>
+
+</div>                
+<div data-role="footer">
+    <small>&#169; ÁLBUM DA COPA 2018</spam></small>
+</div>
+
+<script>
+    $("#login").bind("click", acessar);
+
+    function acessar(){
+
+        var email = $("#email").val();
+        if (!validateEmail(email)) {
+            alerta("E-mail inválido");
+            return false;
+        }
+        
+        var senha = $("#senha").val();
+        if (senha==""){
+            alerta("Informe a senha.");
+            return false;
+        }
+
+        let srv = new dao(
+            "login",
+            `{email: "${email}", senha: "${senha}"}`
+        );
+
+        srv.http("POST").then(dados => {
+            //grava id do usuario    
+            local.PutUsuario(dados);
+            reflash();
+        }).catch(err => {
+            alerta(err);
+        });
+    }
+</script>

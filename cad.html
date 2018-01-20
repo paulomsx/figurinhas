@@ -1,0 +1,80 @@
+<div data-role="header">
+    <h1>COPA 2018</h1> 
+</div>                    
+<div data-role="content" style="padding: 10px;">
+    <div data-role="fieldcontain">
+        <label for="text-basic">Nome:</label>
+        <input type="text" name="text-basic" id="nome" value="" maxlength="60">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="text-basic">E-mail:</label>
+        <input type="text" name="text-basic" id="email" value="" maxlength="60">
+    </div>
+    <div data-role="fieldcontain">
+        <label for="password">Senha:</label>
+        <input type="password" name="senha" id="senha" value="" maxlength="8"/>
+    </div>	
+    <button type='submit' id='validate'>Cadastrar</button>
+    <button type='submit' id='login'>Login</button>
+    <h2 id='result'></h2>
+</div>                
+<div data-role="footer">
+    <small>&#169; ÁLBUM DA COPA 2018</spam></small>
+</div>
+
+<script>
+
+    $("#login").bind("click", login);
+    function login(){
+        carregar_html("login.html","principal");
+    }
+
+    $("#validate").bind("click", validate);
+
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email.toLowerCase());
+    }
+
+    function validate() {
+        
+        $("#result").text("");
+
+        var nome = $("#nome").val();
+        if (nome==""){
+            alerta("Informe o nome.");
+            return false;
+        }
+
+        var email = $("#email").val();
+        if (!validateEmail(email)) {
+            alerta("E-mail inválido");
+            return false;
+        }
+        
+        var senha = $("#senha").val();
+        if (senha==""){
+            alerta("Informe a senha.");
+            return false;
+        }
+
+        /*********************************************************************/
+        let srv = new dao(
+            "copa",
+            `{nome: "${nome}", email: "${email}", senha: "${senha}"}`,
+        );
+    
+        srv.http("POST").then(usuario => {
+            debugger
+            local.PutUsuario(usuario.id);
+            local.PutFaltantes(usuario.faltantes);
+            local.PutRepetidas(usuario.repetidas);
+            objTema.Put("a");
+            reflash();
+        }).catch(err => {
+            alerta(err);
+        });
+        /*********************************************************************/
+    }
+
+</script>

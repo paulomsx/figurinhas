@@ -4,13 +4,25 @@ var tema;
 
 $(document).ready(function() {
     
+
+    let id = local.GetUsuario();
     
+    if (id==null){
+        carregar_html("cad.html","principal");
+        return;
+    }
+
+    reflash();
+    
+});
+
+function reflash(){
     tema=objTema.Get();
     
     carregar_html("principal.html","principal");
-
+    
     AtualizaTela();
-
+    
     /**********************************************************************/
      $( "input[type='checkbox']" ).change(function() {
         let dados = local.Get();
@@ -19,7 +31,8 @@ $(document).ready(function() {
      });                
     /**********************************************************************/
 
-});
+}
+
 
 function rodape(){
     $(".rodape").html(`
@@ -39,6 +52,7 @@ function AtualizaTela(){
         $(carrega_conteudo(contador)).html("");
 
         $(carrega_conteudo(contador)).appendTo( "#contenudo"+k );
+
         contador+=100;
     }
 
@@ -55,8 +69,6 @@ function AtualizaTela(){
 
 /**************************************************************************************************/
 function menu(menu,opcao){
-    
-    // return new Promise((resolve, reject) => {
 
 
         let _menu =`
@@ -78,10 +90,8 @@ function menu(menu,opcao){
         `;
 
         $("#"+menu).html("");
-        $( _menu ).appendTo( "#"+menu );
-      
-    //     resolve();    
-    // });	
+        $(_menu).appendTo( "#"+menu );
+
 }   
 
 function opcaoMenu(escolha,opcao){
@@ -163,4 +173,38 @@ $("#repetidas").click(function(){
 });
 
 		
-     
+function alerta(msg){
+    $("#result").text(msg);
+    $("#result").css("color", "red");
+}     
+
+
+
+/*ini - principal.html */
+
+function Sucesso(msg){
+    $("#result").text(msg);
+    $("#result").css("color", "green");
+}     
+    
+function Gravar(){
+    let id = local.GetUsuario();
+    let faltantes = local.GetFaltantes();
+    let repetidas = local.GetRepetidas();
+    
+    let srv = new dao(
+        "copa",
+        `{id: ${id}, faltantes: "${faltantes}", repetidas: "${repetidas}"}`
+    );
+
+    srv.http("PUT").then(dados => {
+        Sucesso("Gravado com sucesso!!!");
+    }).catch(err => {
+        alerta(err);
+    });
+}//Gravar
+
+/*****************************************************************************/    
+
+
+/*fim - principal.html */

@@ -16,27 +16,21 @@
 </div>
 
 <div data-role="content">
-    <center>
-        <h2>ÁLBUM DA COPA 2018</h2> 
-    </center>                    
-    
-    <div class="ui-field-contain">
+    <div class="ui-field-contain" style="padding: 10px;">
         <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
-            <legend>Minhas Figurinhas:</legend>
-            <input type="radio" name="rdMinhaFigurinhas" id="faltantes" value="faltantes">
+            <legend>Figurinhas:</legend>
+            <input type="radio" name="rdMinhaFigurinhas" id="faltantes" value="faltantes" >
             <label for="faltantes">Faltantes</label>
-            <input type="radio" name="rdMinhaFigurinhas" id="repetidas" value="repetidas">
+            <input type="radio" name="rdMinhaFigurinhas" id="repetidas" value="repetidas" >
             <label for="repetidas">Repetidas</label>
         </fieldset>
     </div>
-    <div class="ui-grid-d ui-responsive">
-        <div class="ui-block-a"><a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-arrow-l">Back to order</a></div>
-        <div class="ui-block-b"><input type="button" data-icon="plus" value="Add products"></div>
-        <div class="ui-block-c"><input type="button" data-icon="plus" value="Add products"></div>
-        <div class="ui-block-d"><input type="button" data-icon="plus" value="Add products"></div>
-        <div class="ui-block-a"><a href="#" class="ui-shadow ui-btn ui-corner-all ui-btn-icon-left ui-icon-arrow-l">Back to order</a></div>
-        <div class="ui-block-b"><input type="button" data-icon="plus" value="Add products"></div>
-        <div class="ui-block-c"><input type="button" data-icon="plus" value="Add products"></div>
+    <h2 id='result'></h2>
+    <div class="ui-grid-d ui-responsive" style="padding: 10px;">
+
+       <button type='submit' id='gravar'>Gravar na Nuvem</button>
+       <button type='submit' id='logoff'>Logoff</button>
+    
     </div>
 </div>
 <div data-role="footer">
@@ -44,12 +38,12 @@
 </div>
 
 <script>
+    $("#gravar").bind("click", Gravar);
 
     if (tema == "a")
         $("#faltantes").prop( "checked", true ); //.checkboxradio( "refresh" );
     else
         $("#repetidas").prop( "checked", true ); //.checkboxradio( "refresh" );
-    
 
     $("input[type='radio']").bind( "change", function(event, ui) {
         //event.preventDefault();
@@ -60,6 +54,9 @@
         else{
             objTema.Put("a");
         };
-        location.reload();       
+        
+        location.reload();    
+       
     });    
+
 </script>

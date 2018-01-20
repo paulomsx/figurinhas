@@ -15,6 +15,11 @@ class Local{
             localStorage.setItem("repetidas", str);
         }
 
+        // let usuario = localStorage.getItem("usuario");
+        // if (usuario==null)
+        // {
+        //     localStorage.setItem("usuario", "");
+        // }           
     }
 
     Get(){
@@ -24,7 +29,33 @@ class Local{
     Put(dados){
         localStorage.setItem(tema=="a" ? "faltantes" : "repetidas", dados);
     }
-    
+
+
+    /*******************************************************/
+    // USADO NO LOGIN    
+    /*******************************************************/
+    PutFaltantes(dados){
+        localStorage.setItem( "faltantes", dados);
+    }
+    GetFaltantes(){
+        return(localStorage.getItem("faltantes"));
+    }
+    PutRepetidas(dados){
+        localStorage.setItem( "repetidas", dados);
+    }
+    GetRepetidas(){
+        return(localStorage.getItem("repetidas"));
+    }
+    /*******************************************************/
+
+    GetUsuario(){
+        return(localStorage.getItem("usuario"));
+    }
+
+    PutUsuario(usuario){
+        localStorage.setItem("usuario", usuario);
+    }
+
     RepeteString(caracter, quantidade){
         let ret = ''; 
         while (quantidade-- > 0) ret += caracter; 
